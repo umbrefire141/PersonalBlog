@@ -26,7 +26,7 @@ export default defineConfig({
 		setupFiles: './src/setupTests.ts', // Links setup file created in step 3
 	},
 	server: {
-		port: 3000,
+		host: '127.0.0.1',
 		strictPort: true,
 	},
 	resolve: {

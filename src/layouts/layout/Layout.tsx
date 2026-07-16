@@ -1,8 +1,10 @@
+import { useAuth } from '@/contexts/auth/AuthContext';
+import { LogOut, PenSquare, UserCog } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
-type Page = '/' | '/gallery' | '/about';
+type Page = '/' | '/gallery' | '/about' | '/auth' | '/create-post' | '/edit-profile';
 
 const NAV_ITEMS: { label: string; page: Page }[] = [
 	{ label: 'Home', page: '/' },
@@ -23,6 +25,7 @@ const Layout = () => {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const location = useLocation();
+	const { isAuthenticated, user, signOut } = useAuth();
 
 	useEffect(() => {
 		if (location.pathname !== page) {
@@ -112,6 +115,54 @@ const Layout = () => {
 							/>
 						</Link>
 					))}
+					{isAuthenticated && (
+						<Link
+							to="/create-post"
+							className="text-sm tracking-widest uppercase transition-all duration-200 relative group"
+							style={{
+								color:
+									location.pathname === '/create-post' ? '#c4b5fd' : '#8b7fb8',
+							}}
+							onClick={() => handlePageChange('/create-post')}
+						>
+							<PenSquare size={14} className="inline mr-1" />
+							Create
+							<span
+								className="absolute -bottom-1 left-0 h-px transition-all duration-200"
+								style={{
+									width: location.pathname === '/create-post' ? '100%' : '0%',
+									background: '#7c3aed',
+								}}
+							/>
+						</Link>
+					)}
+					{isAuthenticated && (
+						<Link
+							to="/edit-profile"
+							className="text-sm tracking-widest uppercase transition-all duration-200 relative group"
+							style={{ color: location.pathname === '/edit-profile' ? '#c4b5fd' : '#8b7fb8' }}
+							onClick={() => handlePageChange('/edit-profile')}
+						>
+							<UserCog size={14} className="inline mr-1" />
+							Profile
+							<span
+								className="absolute -bottom-1 left-0 h-px transition-all duration-200"
+								style={{
+									width: location.pathname === '/edit-profile' ? '100%' : '0%',
+									background: '#7c3aed',
+								}}
+							/>
+						</Link>
+					)}
+					{isAuthenticated && (
+						<button
+							onClick={signOut}
+							className="flex items-center gap-2 text-xs tracking-widest uppercase text-muted-foreground hover:text-destructive transition-colors duration-200 cursor-pointer"
+						>
+							<LogOut size={14} />
+							logout
+						</button>
+					)}
 				</nav>
 
 				<button
@@ -163,6 +214,66 @@ const Layout = () => {
 								{label}
 							</MotionLink>
 						))}
+						{isAuthenticated && (
+							<MotionLink
+								key="create"
+								to="/create-post"
+								initial={{ opacity: 0, x: -30 }}
+								animate={{ opacity: 1, x: 0 }}
+								transition={{ delay: NAV_ITEMS.length * 0.08 }}
+								onClick={() => handlePageChange('/create-post')}
+								className="flex items-center gap-3 text-3xl font-bold mb-6 text-violet-400 hover:text-violet-300 transition-colors duration-200"
+								style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+							>
+								<PenSquare size={24} />
+								Create
+							</MotionLink>
+						)}
+						{isAuthenticated && (
+							<MotionLink
+								key="edit-profile"
+								to="/edit-profile"
+								initial={{ opacity: 0, x: -30 }}
+								animate={{ opacity: 1, x: 0 }}
+								transition={{ delay: (NAV_ITEMS.length + 1) * 0.08 }}
+								onClick={() => handlePageChange('/edit-profile')}
+								className="flex items-center gap-3 text-3xl font-bold mb-6 text-violet-400 hover:text-violet-300 transition-colors duration-200"
+								style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+							>
+								<UserCog size={24} />
+								Profile
+							</MotionLink>
+						)}
+						{isAuthenticated ? (
+							<MotionLink
+								to="/"
+								initial={{ opacity: 0, x: -30 }}
+								animate={{ opacity: 1, x: 0 }}
+								transition={{
+									delay: (NAV_ITEMS.length + (isAuthenticated ? 2 : 0)) * 0.08,
+								}}
+								onClick={() => {
+									signOut();
+									handlePageChange('/');
+								}}
+								className="flex items-center gap-3 text-2xl font-bold mt-4 text-muted-foreground hover:text-destructive transition-colors duration-200"
+							>
+								<LogOut size={20} />
+								Sign Out
+							</MotionLink>
+						) : (
+							<MotionLink
+								to="/auth"
+								initial={{ opacity: 0, x: -30 }}
+								animate={{ opacity: 1, x: 0 }}
+								transition={{ delay: NAV_ITEMS.length * 0.08 }}
+								onClick={() => handlePageChange('/auth')}
+								className="text-5xl font-bold mb-6 hover:text-violet-400 transition-colors duration-200"
+								style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+							>
+								Auth
+							</MotionLink>
+						)}
 					</motion.div>
 				)}
 			</AnimatePresence>
