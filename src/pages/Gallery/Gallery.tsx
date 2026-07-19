@@ -23,6 +23,7 @@ export default function GalleryPage() {
 						if (!post.image_id) return { ...post } as PostWithImage;
 						try {
 							const { data: img } = await imageApi.get(post.image_id);
+							console.log(img);
 							return {
 								...post,
 								image_url: `data:image/jpeg;base64,${img.file_data}`,

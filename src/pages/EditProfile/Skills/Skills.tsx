@@ -58,7 +58,6 @@ const Skills = ({ skills, setSkills }: SkillsProps) => {
 						updateSkill={updateSkill}
 					/>
 				))}
-
 				<SkillForm
 					newSkill={newSkill}
 					setNewSkill={setNewSkill}

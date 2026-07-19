@@ -44,12 +44,12 @@ export const postsApi = {
 };
 
 export const imageApi = {
-	get: (imageId: number) => api.get<Image>(`/images/${imageId}`),
+	get: (imageId: number) => api.get<Image>(`/images/images/${imageId}`),
 
 	upload: (postId: number, file: File) => {
 		const form = new FormData();
 		form.append('image', file);
-		return api.post<Image>(`/posts/${postId}/image`, form, {
+		return api.post<Image>(`images/posts/${postId}/image`, form, {
 			headers: { 'Content-Type': 'multipart/form-data' },
 		});
 	},

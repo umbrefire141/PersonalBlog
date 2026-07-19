@@ -34,7 +34,7 @@ const PostForm = () => {
 				title: data.title,
 				type: data.type,
 			});
-			if (data.image?.[0]) {
+			if (data.image?.[0] && post) {
 				await imageApi.upload(post.id, data.image[0]);
 			}
 			toast.success('Post created successfully');
